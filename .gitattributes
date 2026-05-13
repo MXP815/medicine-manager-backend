@@ -1,2 +1,36 @@
-/mvnw text eol=lf
+# Git attributes file itself should use LF
+.gitattributes text eol=lf
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Java source files should use LF
+*.java text eol=lf
+*.xml text eol=lf
+*.properties text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Windows scripts should use CRLF
+*.bat text eol=crlf
 *.cmd text eol=crlf
+
+# Unix scripts should use LF
+*.sh text eol=lf
+/mvnw text eol=lf
+
+# Documentation
+*.md text eol=lf
+*.txt text eol=lf
+
+# Binary files (no conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.jar binary
+*.war binary
+*.ear binary
+*.class binary
