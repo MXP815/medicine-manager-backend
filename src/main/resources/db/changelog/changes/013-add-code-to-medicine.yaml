@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-add-code-to-medicine
+      author: system
+      comment: 为药品表添加药品编码字段
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            columnExists:
+              tableName: t_medicine
+              columnName: code
+      changes:
+        - addColumn:
+            tableName: t_medicine
+            columns:
+              - column:
+                  name: code
+                  type: VARCHAR(50)
+                  remarks: 药品编码（唯一标识）
+        - createIndex:
+            indexName: idx_code
+            tableName: t_medicine
+            unique: true
+            columns:
+              - column:
+                  name: code
+

@@ -1,0 +1,104 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: medicine-manager-system
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/medicine_manager_system?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false
+    username: root
+    password: ma20041010
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 3447327462@qq.com
+    password: jysdixelpwwlcidh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: localhost:8848
+        namespace: public
+        group: DEFAULT_GROUP
+        enabled: true
+        register-enabled: false
+        heart-beat-interval: 5000
+        heart-beat-timeout: 15000
+        ip-delete-timeout: 30000
+        naming-load-cache-at-start: true
+        cluster-name: DEFAULT
+        connect-timeout: 20000
+        request-timeout: 10000
+      config:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: public
+        group: DEFAULT_GROUP
+        enabled: true
+        file-extension: yml
+        refresh-enabled: true
+        prefix: ${spring.application.name}
+        shared-configs:
+          - data-id: medicine-manager-system.yml
+            group: DEFAULT_GROUP
+            refresh-enabled: true
+
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      database: 0
+      password: 123456
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+  redisson:
+    config: |
+      {
+        "singleServerConfig": {
+          "address": "redis://localhost:6379",
+          "password": "123456",
+          "database": 0,
+          "connectionMinimumIdleSize": 8,
+          "connectionPoolSize": 64
+        }
+      }
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: auto
+      table-prefix: t_
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_CN
+    swagger-models: true
+
+jwt:
+  secret: your-secret-key-here-change-in-production-abcdefg123456
+  expiration: 86400000
+  refresh-expiration: 604800000
+

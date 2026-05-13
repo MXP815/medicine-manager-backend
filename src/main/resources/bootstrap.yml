@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: medicine-manager-system
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: public
+        group: DEFAULT_GROUP
+        enabled: true
+        register-enabled: false
+        heart-beat-interval: 5000
+        heart-beat-timeout: 15000
+        ip-delete-timeout: 30000
+        naming-load-cache-at-start: true
+      config:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: public
+        group: DEFAULT_GROUP
+        enabled: false
+        file-extension: yml
+        refresh-enabled: true

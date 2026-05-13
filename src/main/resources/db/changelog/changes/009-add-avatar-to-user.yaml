@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016-add-avatar-to-user
+      author: system
+      comment: 为 t_user 表添加 avatar 字段
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          - columnExists:
+              tableName: t_user
+              columnName: avatar
+      changes:
+        - addColumn:
+            tableName: t_user
+            columns:
+              - column:
+                  name: avatar
+                  type: VARCHAR(500)
+                  remarks: 用户头像 URL

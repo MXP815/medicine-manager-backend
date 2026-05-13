@@ -1,0 +1,9 @@
+databaseChangeLog:
+    - changeSet:
+          id: 019-fix-purchase-order-creator
+          author: system
+          comment: 修复已有采购订单的创建人ID
+          changes:
+              - sql:
+                    sql: "UPDATE t_purchase_order SET creator_id = (SELECT id FROM t_user WHERE role = 1 AND status = 1 AND deleted = 0 ORDER BY id ASC LIMIT 1) WHERE creator_id IS NULL"
+

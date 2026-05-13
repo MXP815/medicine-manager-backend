@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 015-update-medicine-data
+      author: system
+      comment: 为现有药品数据补充编码、剂型和状态
+      changes:
+        - sql:
+            sql: |
+              -- 为所有没有编码的药品生成编码（格式：MED + 6位数字）
+              UPDATE t_medicine 
+              SET code = CONCAT('MED', LPAD(id, 6, '0'))
+              WHERE code IS NULL OR code = '';
+              
+              -- 根据药品名称智能设置剂型
+              UPDATE t_medicine SET form = CASE
+                  WHEN name LIKE '%胶囊%' THEN '胶囊剂'
+                  WHEN name LIKE '%颗粒%' THEN '颗粒剂'
+                  WHEN name LIKE '%片%' AND name NOT LIKE '%含片%' THEN '片剂'
+                  WHEN name LIKE '%口服液%' OR name LIKE '%糖浆%' THEN '口服液'
+                  WHEN name LIKE '%软膏%' OR name LIKE '%乳膏%' THEN '软膏剂'
+                  WHEN name LIKE '%丸%' THEN '丸剂'
+                  WHEN name LIKE '%散%' THEN '散剂'
+                  WHEN name LIKE '%水%' AND name NOT LIKE '%花露水%' THEN '水剂'
+                  WHEN name LIKE '%含片%' THEN '含片'
+                  WHEN name LIKE '%膏%' AND name NOT LIKE '%软膏%' AND name NOT LIKE '%乳膏%' THEN '膏剂'
+                  WHEN name LIKE '%滴眼液%' THEN '滴眼液'
+                  WHEN name LIKE '%贴%' OR name LIKE '%膏药%' THEN '贴剂'
+                  WHEN name LIKE '%油%' THEN '搽剂'
+                  WHEN category = '医疗器械' THEN '器械'
+                  WHEN category = '外用药' THEN '外用剂'
+                  WHEN category = '消毒用品' THEN '消毒剂'
+                  WHEN category = '防护用品' THEN '防护用品'
+                  WHEN category = '个人护理' THEN '护理品'
+                  WHEN category = '口腔护理' THEN '口腔护理'
+                  WHEN category = '婴幼儿用品' THEN '婴幼儿用品'
+                  WHEN category = '护理用品' THEN '护理用品'
+                  WHEN category = '医疗用品' THEN '医疗用品'
+                  WHEN category = '保健品' THEN '保健品'
+                  ELSE '其他'
+              END
+              WHERE form IS NULL OR form = '';
+              
+              -- 设置默认状态为启用
+              UPDATE t_medicine 
+              SET status = 1
+              WHERE status IS NULL;
+

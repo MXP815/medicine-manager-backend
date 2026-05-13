@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 018-insert-default-supplier
+      author: system
+      comment: 插入默认供应商数据
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO t_supplier (
+                name, 
+                contact_person, 
+                contact_phone, 
+                contact_email, 
+                address, 
+                business_scope, 
+                license_number, 
+                license_expiry_date, 
+                cooperation_level, 
+                rating, 
+                blacklisted, 
+                remark
+              ) VALUES (
+                '默认供应商',
+                '张三',
+                '13800138000',
+                'supplier@example.com',
+                '北京市朝阳区某某街道123号',
+                '药品批发、零售',
+                'SP1234567890',
+                '2030-12-31',
+                'A级',
+                5,
+                0,
+                '系统默认供应商，用于AI建议一键生成订单'
+              );
+

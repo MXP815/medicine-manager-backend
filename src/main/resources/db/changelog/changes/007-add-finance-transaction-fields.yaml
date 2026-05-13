@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-add-finance-transaction-fields
+      author: system
+      comment: 为财务流水表添加 source、source_type 和 status 字段
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          - columnExists:
+              tableName: t_finance_transaction
+              columnName: source
+      changes:
+        - addColumn:
+            tableName: t_finance_transaction
+            columns:
+              - column:
+                  name: source
+                  type: VARCHAR(100)
+                  remarks: 来源
+              - column:
+                  name: source_type
+                  type: VARCHAR(50)
+                  remarks: 来源类型
+              - column:
+                  name: status
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 状态：0-待确认 1-已确认

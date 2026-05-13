@@ -1,0 +1,188 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-quality-acceptance-table
+      author: system
+      comment: 创建药品验收记录表
+      changes:
+        - createTable:
+            tableName: t_quality_acceptance
+            remarks: 药品验收记录表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: purchase_order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 采购订单 ID
+              - column:
+                  name: purchase_order_item_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 采购订单明细 ID
+              - column:
+                  name: batch_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                  remarks: 药品批号
+              - column:
+                  name: check_quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 检验数量
+              - column:
+                  name: qualified_quantity
+                  type: INT
+                  remarks: 合格数量
+              - column:
+                  name: unqualified_quantity
+                  type: INT
+                  remarks: 不合格数量
+              - column:
+                  name: acceptance_result
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 验收结果：0-待验收 1-合格 2-不合格
+              - column:
+                  name: quality_report_path
+                  type: VARCHAR(255)
+                  remarks: 质检报告路径
+              - column:
+                  name: rejection_reason
+                  type: TEXT
+                  remarks: 拒收原因
+              - column:
+                  name: checker_id
+                  type: BIGINT
+                  remarks: 验收人 ID
+              - column:
+                  name: check_time
+                  type: DATETIME
+                  remarks: 验收时间
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_purchase_order_id
+            tableName: t_quality_acceptance
+            unique: false
+            columns:
+              - column:
+                  name: purchase_order_id
+        - createIndex:
+            indexName: idx_batch_number
+            tableName: t_quality_acceptance
+            unique: false
+            columns:
+              - column:
+                  name: batch_number
+
+  - changeSet:
+      id: 004-create-expired-medicine-record-table
+      author: system
+      comment: 创建过期药品处理记录表
+      changes:
+        - createTable:
+            tableName: t_expired_medicine_record
+            remarks: 过期药品处理记录表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: medicine_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 药品 ID
+              - column:
+                  name: batch_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                  remarks: 批次号
+              - column:
+                  name: quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 处理数量
+              - column:
+                  name: expiry_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+                  remarks: 有效期
+              - column:
+                  name: handle_method
+                  type: VARCHAR(50)
+                  remarks: 处理方式：销毁/退货
+              - column:
+                  name: handle_time
+                  type: DATETIME
+                  remarks: 处理时间
+              - column:
+                  name: handler_id
+                  type: BIGINT
+                  remarks: 处理人 ID
+              - column:
+                  name: supervisor_id
+                  type: BIGINT
+                  remarks: 监管人员 ID
+              - column:
+                  name: reason
+                  type: TEXT
+                  remarks: 处理原因
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+        - createIndex:
+            indexName: idx_medicine_id
+            tableName: t_expired_medicine_record
+            unique: false
+            columns:
+              - column:
+                  name: medicine_id
+        - createIndex:
+            indexName: idx_expiry_date
+            tableName: t_expired_medicine_record
+            unique: false
+            columns:
+              - column:
+                  name: expiry_date

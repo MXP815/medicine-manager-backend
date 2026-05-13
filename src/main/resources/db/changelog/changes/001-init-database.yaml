@@ -1,0 +1,515 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-medicine-table
+      author: system
+      comment: 创建药品信息表
+      changes:
+        - createTable:
+            tableName: t_medicine
+            remarks: 药品信息表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                  remarks: 药品名称
+              - column:
+                  name: specification
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                  remarks: 规格
+              - column:
+                  name: manufacturer
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+                  remarks: 生产厂家
+              - column:
+                  name: unit
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+                  remarks: 单位
+              - column:
+                  name: shelf_life
+                  type: INT
+                  remarks: 有效期（天）
+              - column:
+                  name: storage_condition
+                  type: VARCHAR(100)
+                  remarks: 存储条件
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  remarks: 分类
+              - column:
+                  name: approval_number
+                  type: VARCHAR(50)
+                  remarks: 批准文号
+              - column:
+                  name: barcode
+                  type: VARCHAR(50)
+                  remarks: 条形码
+              - column:
+                  name: prescription_type
+                  type: VARCHAR(20)
+                  remarks: 处方类型
+              - column:
+                  name: purchase_price
+                  type: DECIMAL(10,2)
+                  remarks: 采购价格
+              - column:
+                  name: sale_price
+                  type: DECIMAL(10,2)
+                  remarks: 销售价格
+              - column:
+                  name: description
+                  type: TEXT
+                  remarks: 描述
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_name
+            tableName: t_medicine
+            unique: false
+            columns:
+              - column:
+                  name: name
+        - createIndex:
+            indexName: idx_barcode
+            tableName: t_medicine
+            unique: false
+            columns:
+              - column:
+                  name: barcode
+        - createIndex:
+            indexName: idx_approval_number
+            tableName: t_medicine
+            unique: false
+            columns:
+              - column:
+                  name: approval_number
+
+  - changeSet:
+      id: 002-create-supplier-table
+      author: system
+      comment: 创建供应商信息表
+      changes:
+        - createTable:
+            tableName: t_supplier
+            remarks: 供应商信息表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                  remarks: 供应商名称
+              - column:
+                  name: contact_person
+                  type: VARCHAR(50)
+                  remarks: 联系人
+              - column:
+                  name: contact_phone
+                  type: VARCHAR(20)
+                  remarks: 联系电话
+              - column:
+                  name: contact_email
+                  type: VARCHAR(100)
+                  remarks: 联系邮箱
+              - column:
+                  name: address
+                  type: VARCHAR(200)
+                  remarks: 地址
+              - column:
+                  name: business_scope
+                  type: VARCHAR(200)
+                  remarks: 经营范围
+              - column:
+                  name: license_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                  remarks: 许可证号
+              - column:
+                  name: license_path
+                  type: VARCHAR(255)
+                  remarks: 资质文件路径
+              - column:
+                  name: license_expiry_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+                  remarks: 资质有效期
+              - column:
+                  name: cooperation_level
+                  type: VARCHAR(20)
+                  remarks: 合作等级
+              - column:
+                  name: rating
+                  type: INT
+                  defaultValueNumeric: 5
+                  remarks: 评级
+              - column:
+                  name: blacklisted
+                  type: TINYINT
+                  defaultValueBoolean: false
+                  remarks: 黑名单标识
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_name
+            tableName: t_supplier
+            unique: false
+            columns:
+              - column:
+                  name: name
+        - createIndex:
+            indexName: idx_license_number
+            tableName: t_supplier
+            unique: false
+            columns:
+              - column:
+                  name: license_number
+
+  - changeSet:
+      id: 003-create-purchase-order-table
+      author: system
+      comment: 创建采购订单表
+      changes:
+        - createTable:
+            tableName: t_purchase_order
+            remarks: 采购订单表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_no
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+                  remarks: 订单编号
+              - column:
+                  name: supplier_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 供应商 ID
+              - column:
+                  name: status
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 订单状态：0-草稿 1-已提交 2-已审核 3-已拒绝 4-已完成 5-已取消
+              - column:
+                  name: total_amount
+                  type: DECIMAL(12,2)
+                  remarks: 订单总金额
+              - column:
+                  name: total_count
+                  type: INT
+                  remarks: 订单总数量
+              - column:
+                  name: expected_delivery_date
+                  type: DATETIME
+                  remarks: 预计交货日期
+              - column:
+                  name: actual_delivery_date
+                  type: DATETIME
+                  remarks: 实际交货日期
+              - column:
+                  name: contract_path
+                  type: VARCHAR(255)
+                  remarks: 合同路径
+              - column:
+                  name: invoice_path
+                  type: VARCHAR(255)
+                  remarks: 发票路径
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: creator_id
+                  type: BIGINT
+                  remarks: 创建人 ID
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_supplier_id
+            tableName: t_purchase_order
+            unique: false
+            columns:
+              - column:
+                  name: supplier_id
+        - createIndex:
+            indexName: idx_status
+            tableName: t_purchase_order
+            unique: false
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            indexName: idx_order_no
+            tableName: t_purchase_order
+            unique: false
+            columns:
+              - column:
+                  name: order_no
+
+  - changeSet:
+      id: 004-create-purchase-order-item-table
+      author: system
+      comment: 创建采购订单明细表
+      changes:
+        - createTable:
+            tableName: t_purchase_order_item
+            remarks: 采购订单明细表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 订单 ID
+              - column:
+                  name: medicine_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 药品 ID
+              - column:
+                  name: quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 数量
+              - column:
+                  name: unit_price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+                  remarks: 单价
+              - column:
+                  name: total_price
+                  type: DECIMAL(12,2)
+                  remarks: 总价
+              - column:
+                  name: batch_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                  remarks: 批号
+              - column:
+                  name: production_date
+                  type: DATE
+                  remarks: 生产日期
+              - column:
+                  name: expiry_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+                  remarks: 有效期
+              - column:
+                  name: received_quantity
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 已收货数量
+              - column:
+                  name: rejected_quantity
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 拒收数量
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_order_id
+            tableName: t_purchase_order_item
+            unique: false
+            columns:
+              - column:
+                  name: order_id
+        - createIndex:
+            indexName: idx_medicine_id
+            tableName: t_purchase_order_item
+            unique: false
+            columns:
+              - column:
+                  name: medicine_id
+
+  - changeSet:
+      id: 005-create-inventory-table
+      author: system
+      comment: 创建药品库存表
+      changes:
+        - createTable:
+            tableName: t_inventory
+            remarks: 药品库存表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: medicine_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 药品 ID
+              - column:
+                  name: batch_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                  remarks: 批次号
+              - column:
+                  name: warehouse_location
+                  type: VARCHAR(50)
+                  remarks: 库位
+              - column:
+                  name: quantity
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 当前数量
+              - column:
+                  name: expiry_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+                  remarks: 有效期
+              - column:
+                  name: warning_status
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 预警状态：0-正常 1-近效期 2-临期
+              - column:
+                  name: storage_temperature
+                  type: VARCHAR(20)
+                  remarks: 存储温度
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_medicine_id
+            tableName: t_inventory
+            unique: false
+            columns:
+              - column:
+                  name: medicine_id
+        - createIndex:
+            indexName: idx_batch_number
+            tableName: t_inventory
+            unique: false
+            columns:
+              - column:
+                  name: batch_number
+        - createIndex:
+            indexName: idx_expiry_date
+            tableName: t_inventory
+            unique: false
+            columns:
+              - column:
+                  name: expiry_date

@@ -1,0 +1,205 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-finance-transaction-table
+      author: system
+      comment: 创建财务流水表
+      changes:
+        - createTable:
+            tableName: t_finance_transaction
+            remarks: 财务流水表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: transaction_no
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+                  remarks: 流水编号
+              - column:
+                  name: business_type
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 业务类型：1-采购 2-销售 3-其他
+              - column:
+                  name: related_order_id
+                  type: BIGINT
+                  remarks: 关联订单 ID
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  remarks: 客户 ID
+              - column:
+                  name: supplier_id
+                  type: BIGINT
+                  remarks: 供应商 ID
+              - column:
+                  name: amount
+                  type: DECIMAL(12,2)
+                  constraints:
+                    nullable: false
+                  remarks: 金额
+              - column:
+                  name: transaction_type
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 收支类型：1-收入 2-支出
+              - column:
+                  name: payment_method
+                  type: VARCHAR(20)
+                  remarks: 支付方式
+              - column:
+                  name: transaction_time
+                  type: DATETIME
+                  remarks: 交易时间
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: operator_id
+                  type: BIGINT
+                  remarks: 操作人 ID
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_transaction_no
+            tableName: t_finance_transaction
+            unique: false
+            columns:
+              - column:
+                  name: transaction_no
+        - createIndex:
+            indexName: idx_business_type
+            tableName: t_finance_transaction
+            unique: false
+            columns:
+              - column:
+                  name: business_type
+        - createIndex:
+            indexName: idx_transaction_time
+            tableName: t_finance_transaction
+            unique: false
+            columns:
+              - column:
+                  name: transaction_time
+
+  - changeSet:
+      id: 005-create-receivable-payable-table
+      author: system
+      comment: 创建应收应付账款表
+      changes:
+        - createTable:
+            tableName: t_receivable_payable
+            remarks: 应收应付账款表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: bill_no
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+                  remarks: 单据编号
+              - column:
+                  name: business_type
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 业务类型：1-应收 2-应付
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  remarks: 客户 ID
+              - column:
+                  name: supplier_id
+                  type: BIGINT
+                  remarks: 供应商 ID
+              - column:
+                  name: related_order_id
+                  type: BIGINT
+                  remarks: 关联订单 ID
+              - column:
+                  name: total_amount
+                  type: DECIMAL(12,2)
+                  constraints:
+                    nullable: false
+                  remarks: 总金额
+              - column:
+                  name: paid_amount
+                  type: DECIMAL(12,2)
+                  defaultValueNumeric: 0
+                  remarks: 已付金额
+              - column:
+                  name: unpaid_amount
+                  type: DECIMAL(12,2)
+                  remarks: 未付金额
+              - column:
+                  name: due_date
+                  type: DATE
+                  remarks: 到期日期
+              - column:
+                  name: status
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 状态：0-未结清 1-已结清
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_bill_no
+            tableName: t_receivable_payable
+            unique: false
+            columns:
+              - column:
+                  name: bill_no
+        - createIndex:
+            indexName: idx_status
+            tableName: t_receivable_payable
+            unique: false
+            columns:
+              - column:
+                  name: status

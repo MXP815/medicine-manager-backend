@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016-add-fields-to-ai-suggestion
+      author: system
+      comment: 为AI建议表添加详细字段
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            columnExists:
+              tableName: t_ai_suggestion
+              columnName: medicine_ids
+      changes:
+        - addColumn:
+            tableName: t_ai_suggestion
+            columns:
+              - column:
+                  name: medicine_ids
+                  type: VARCHAR(500)
+                  remarks: 建议采购的药品ID列表（逗号分隔）
+              - column:
+                  name: quantities
+                  type: VARCHAR(500)
+                  remarks: 对应的采购数量列表（逗号分隔）
+              - column:
+                  name: supplier_id
+                  type: BIGINT
+                  remarks: 推荐供应商ID
+              - column:
+                  name: estimated_amount
+                  type: DECIMAL(12,2)
+                  remarks: 预估金额
+

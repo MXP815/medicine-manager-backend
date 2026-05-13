@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 021-add-medicine-id-to-quality-acceptance
+      author: system
+      comment: 为质量验收表添加药品 ID 字段
+      changes:
+        - addColumn:
+            tableName: t_quality_acceptance
+            columns:
+              - column:
+                  name: medicine_id
+                  type: BIGINT
+                  remarks: 药品 ID
+        - createIndex:
+            indexName: idx_medicine_id
+            tableName: t_quality_acceptance
+            unique: false
+            columns:
+              - column:
+                  name: medicine_id
+

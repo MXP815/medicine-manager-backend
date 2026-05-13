@@ -1,0 +1,258 @@
+databaseChangeLog:
+    - changeSet:
+        id: 006-add-missing-fields
+        author: system
+        changes:
+          # 为 t_customer 添加 points 和 status 字段
+          - addColumn:
+              tableName: t_customer
+              columns:
+                - column:
+                    name: points
+                    type: INT
+                    defaultValue: 0
+                    remarks: 客户积分
+                - column:
+                    name: status
+                    type: INT
+                    defaultValue: 1
+                    remarks: 状态：0-禁用，1-启用
+
+          # 为 t_medicine 添加 min_stock 字段
+          - addColumn:
+              tableName: t_medicine
+              columns:
+                - column:
+                    name: min_stock
+                    type: INT
+                    defaultValue: 10
+                    remarks: 最小库存阈值
+
+          # 为 t_inventory 添加 min_stock 和 status 字段
+          - addColumn:
+              tableName: t_inventory
+              columns:
+                - column:
+                    name: min_stock
+                    type: INT
+                    defaultValue: 10
+                    remarks: 最小库存阈值
+                - column:
+                    name: status
+                    type: INT
+                    defaultValue: 1
+                    remarks: 状态：0-不可用，1-可用
+
+          # 为 t_quality_acceptance 添加 status 字段
+          - addColumn:
+              tableName: t_quality_acceptance
+              columns:
+                - column:
+                    name: status
+                    type: INT
+                    defaultValue: 0
+                    remarks: 验收状态：0-待验收，1-验收中，2-合格，3-不合格
+
+    - changeSet:
+        id: 007-create-notice-table
+        author: system
+        comment: 创建通知公告表
+        changes:
+          - createTable:
+              tableName: t_notice
+              remarks: 通知公告表
+              columns:
+                - column:
+                    name: id
+                    type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: title
+                    type: VARCHAR(200)
+                    constraints:
+                      nullable: false
+                    remarks: 公告标题
+                - column:
+                    name: content
+                    type: TEXT
+                    remarks: 公告内容
+                - column:
+                    name: type
+                    type: INT
+                    defaultValueNumeric: 1
+                    remarks: 公告类型：1-系统公告 2-业务通知 3-紧急通知
+                - column:
+                    name: priority
+                    type: INT
+                    defaultValueNumeric: 0
+                    remarks: 优先级：0-普通 1-重要 2-紧急
+                - column:
+                    name: publisher_id
+                    type: BIGINT
+                    remarks: 发布人 ID
+                - column:
+                    name: publisher_name
+                    type: VARCHAR(50)
+                    remarks: 发布人姓名
+                - column:
+                    name: publish_time
+                    type: DATETIME
+                    remarks: 发布时间
+                - column:
+                    name: status
+                    type: INT
+                    defaultValueNumeric: 0
+                    remarks: 状态：0-草稿 1-已发布 2-已撤回
+                - column:
+                    name: view_count
+                    type: INT
+                    defaultValueNumeric: 0
+                    remarks: 浏览次数
+                - column:
+                    name: create_time
+                    type: DATETIME
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                    remarks: 创建时间
+                - column:
+                    name: update_time
+                    type: DATETIME
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                    remarks: 更新时间
+                - column:
+                    name: deleted
+                    type: TINYINT
+                    defaultValueNumeric: 0
+                    remarks: 逻辑删除标识
+          - createIndex:
+              indexName: idx_type
+              tableName: t_notice
+              unique: false
+              columns:
+                - column:
+                    name: type
+          - createIndex:
+              indexName: idx_status
+              tableName: t_notice
+              unique: false
+              columns:
+                - column:
+                    name: status
+          - createIndex:
+              indexName: idx_publish_time
+              tableName: t_notice
+              unique: false
+              columns:
+                - column:
+                    name: publish_time
+
+    - changeSet:
+        id: 008-create-user-notice-table
+        author: system
+        comment: 创建用户公告关联表（用于标记已读状态）
+        changes:
+          - createTable:
+              tableName: t_user_notice
+              remarks: 用户公告关联表
+              columns:
+                - column:
+                    name: id
+                    type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: user_id
+                    type: BIGINT
+                    constraints:
+                      nullable: false
+                    remarks: 用户 ID
+                - column:
+                    name: notice_id
+                    type: BIGINT
+                    constraints:
+                      nullable: false
+                    remarks: 公告 ID
+                - column:
+                    name: is_read
+                    type: TINYINT
+                    defaultValueNumeric: 0
+                    remarks: 是否已读：0-未读 1-已读
+                - column:
+                    name: read_time
+                    type: DATETIME
+                    remarks: 阅读时间
+                - column:
+                    name: create_time
+                    type: DATETIME
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                    remarks: 创建时间
+                - column:
+                    name: deleted
+                    type: TINYINT
+                    defaultValueNumeric: 0
+                    remarks: 逻辑删除标识
+          - createIndex:
+              indexName: idx_user_id
+              tableName: t_user_notice
+              unique: false
+              columns:
+                - column:
+                    name: user_id
+          - createIndex:
+              indexName: idx_notice_id
+              tableName: t_user_notice
+              unique: false
+              columns:
+                - column:
+                    name: notice_id
+          - createIndex:
+              indexName: idx_is_read
+              tableName: t_user_notice
+              unique: false
+              columns:
+                - column:
+                    name: is_read
+
+    - changeSet:
+        id: 009-add-deleted-to-operation-log
+        author: system
+        comment: 为 t_operation_log 添加逻辑删除字段
+        preConditions:
+          onFail: MARK_RAN
+          not:
+            - columnExists:
+                tableName: t_operation_log
+                columnName: deleted
+        changes:
+          - addColumn:
+              tableName: t_operation_log
+              columns:
+                - column:
+                    name: deleted
+                    type: TINYINT
+                    defaultValueNumeric: 0
+                    remarks: 逻辑删除标识
+
+    - changeSet:
+        id: 010-add-deleted-to-user-notice
+        author: system
+        comment: 为 t_user_notice 添加逻辑删除字段
+        preConditions:
+          onFail: MARK_RAN
+          not:
+            - columnExists:
+                tableName: t_user_notice
+                columnName: deleted
+        changes:
+          - addColumn:
+              tableName: t_user_notice
+              columns:
+                - column:
+                    name: deleted
+                    type: TINYINT
+                    defaultValueNumeric: 0
+                    remarks: 逻辑删除标识

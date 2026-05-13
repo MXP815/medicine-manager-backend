@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017-add-approval-fields-to-purchase-order
+      author: system
+      comment: 为采购订单表添加审批相关字段
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            columnExists:
+              tableName: t_purchase_order
+              columnName: approver_id
+      changes:
+        - addColumn:
+            tableName: t_purchase_order
+            columns:
+              - column:
+                  name: approver_id
+                  type: BIGINT
+                  remarks: 审批人ID
+              - column:
+                  name: approve_time
+                  type: DATETIME
+                  remarks: 审批时间
+              - column:
+                  name: reject_reason
+                  type: VARCHAR(500)
+                  remarks: 拒绝原因
+

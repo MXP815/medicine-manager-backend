@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-create-verification-code-table
+      author: k1763
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              tableName: t_verification_code
+      changes:
+        - createTable:
+            tableName: t_verification_code
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  remarks: 验证码类型 EMAIL_RESET/SMS_RESET
+              - column:
+                  name: target
+                  type: VARCHAR(100)
+                  remarks: 目标邮箱或手机号
+              - column:
+                  name: code
+                  type: VARCHAR(10)
+                  remarks: 验证码
+              - column:
+                  name: expire_time
+                  type: DATETIME
+                  remarks: 过期时间
+              - column:
+                  name: used
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 是否已使用
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+        - createIndex:
+            indexName: idx_type_target
+            tableName: t_verification_code
+            columns:
+              - column:
+                  name: type
+              - column:
+                  name: target

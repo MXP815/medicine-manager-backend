@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-add-form-to-medicine
+      author: system
+      comment: 为药品表添加剂型字段
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            columnExists:
+              tableName: t_medicine
+              columnName: form
+      changes:
+        - addColumn:
+            tableName: t_medicine
+            columns:
+              - column:
+                  name: form
+                  type: VARCHAR(50)
+                  remarks: 剂型（如：片剂、胶囊、口服液等）
+

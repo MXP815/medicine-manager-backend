@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 014-add-status-to-medicine
+      author: system
+      comment: 为药品表添加状态字段
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            columnExists:
+              tableName: t_medicine
+              columnName: status
+      changes:
+        - addColumn:
+            tableName: t_medicine
+            columns:
+              - column:
+                  name: status
+                  type: INT
+                  defaultValueNumeric: 1
+                  remarks: 状态：0-停用，1-启用
+

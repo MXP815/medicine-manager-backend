@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020-add-status-and-error-to-operation-log
+      author: system
+      comment: 为操作日志表添加状态和错误信息字段
+      changes:
+        - addColumn:
+            tableName: t_operation_log
+            columns:
+              - column:
+                  name: status
+                  type: INT
+                  defaultValueNumeric: 1
+                  remarks: 操作状态 1-成功 0-失败
+              - column:
+                  name: error_msg
+                  type: TEXT
+                  remarks: 错误信息
+

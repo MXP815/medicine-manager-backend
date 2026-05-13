@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-create-ai-suggestion-table
+      author: k1763
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            tableExists:
+              tableName: t_ai_suggestion
+      changes:
+        - createTable:
+            tableName: t_ai_suggestion
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  remarks: 建议分类
+              - column:
+                  name: title
+                  type: VARCHAR(200)
+                  remarks: 建议标题
+              - column:
+                  name: content
+                  type: TEXT
+                  remarks: 建议内容
+              - column:
+                  name: priority
+                  type: INT
+                  defaultValueNumeric: 5
+                  remarks: 优先级 1-10
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+        - createIndex:
+            indexName: idx_category_priority
+            tableName: t_ai_suggestion
+            columns:
+              - column:
+                  name: category
+              - column:
+                  name: priority
+

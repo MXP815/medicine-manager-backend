@@ -1,0 +1,275 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-customer-table
+      author: system
+      comment: 创建客户信息表
+      changes:
+        - createTable:
+            tableName: t_customer
+            remarks: 客户信息表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                  remarks: 客户名称
+              - column:
+                  name: contact_person
+                  type: VARCHAR(50)
+                  remarks: 联系人
+              - column:
+                  name: contact_phone
+                  type: VARCHAR(20)
+                  remarks: 联系电话
+              - column:
+                  name: contact_email
+                  type: VARCHAR(100)
+                  remarks: 联系邮箱
+              - column:
+                  name: delivery_address
+                  type: VARCHAR(200)
+                  remarks: 配送地址
+              - column:
+                  name: credit_limit
+                  type: DECIMAL(12,2)
+                  remarks: 信用额度
+              - column:
+                  name: customer_level
+                  type: INT
+                  defaultValueNumeric: 1
+                  remarks: 客户等级
+              - column:
+                  name: total_orders
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 历史订单数
+              - column:
+                  name: total_amount
+                  type: DECIMAL(12,2)
+                  defaultValueNumeric: 0
+                  remarks: 累计金额
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_name
+            tableName: t_customer
+            unique: false
+            columns:
+              - column:
+                  name: name
+
+  - changeSet:
+      id: 003-create-sales-order-table
+      author: system
+      comment: 创建销售订单表
+      changes:
+        - createTable:
+            tableName: t_sales_order
+            remarks: 销售订单表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_no
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+                  remarks: 订单编号
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 客户 ID
+              - column:
+                  name: status
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: 订单状态：0-草稿 1-已提交 2-已审核 3-已发货 4-已完成 5-已取消
+              - column:
+                  name: total_amount
+                  type: DECIMAL(12,2)
+                  remarks: 订单总金额
+              - column:
+                  name: total_count
+                  type: INT
+                  remarks: 订单总数量
+              - column:
+                  name: payment_method
+                  type: VARCHAR(20)
+                  remarks: 支付方式
+              - column:
+                  name: delivery_method
+                  type: VARCHAR(20)
+                  remarks: 配送方式
+              - column:
+                  name: delivery_no
+                  type: VARCHAR(50)
+                  remarks: 物流单号
+              - column:
+                  name: delivery_date
+                  type: DATETIME
+                  remarks: 发货时间
+              - column:
+                  name: prescription_path
+                  type: VARCHAR(255)
+                  remarks: 处方路径
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: creator_id
+                  type: BIGINT
+                  remarks: 创建人 ID
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_customer_id
+            tableName: t_sales_order
+            unique: false
+            columns:
+              - column:
+                  name: customer_id
+        - createIndex:
+            indexName: idx_status
+            tableName: t_sales_order
+            unique: false
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            indexName: idx_order_no
+            tableName: t_sales_order
+            unique: false
+            columns:
+              - column:
+                  name: order_no
+
+  - changeSet:
+      id: 004-create-sales-order-item-table
+      author: system
+      comment: 创建销售订单明细表
+      changes:
+        - createTable:
+            tableName: t_sales_order_item
+            remarks: 销售订单明细表
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 订单 ID
+              - column:
+                  name: medicine_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                  remarks: 药品 ID
+              - column:
+                  name: batch_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                  remarks: 批号
+              - column:
+                  name: quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+                  remarks: 数量
+              - column:
+                  name: unit_price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+                  remarks: 单价
+              - column:
+                  name: total_price
+                  type: DECIMAL(12,2)
+                  remarks: 总价
+              - column:
+                  name: remark
+                  type: TEXT
+                  remarks: 备注
+              - column:
+                  name: create_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 创建时间
+              - column:
+                  name: update_time
+                  type: DATETIME
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  remarks: 更新时间
+              - column:
+                  name: deleted
+                  type: TINYINT
+                  defaultValueNumeric: 0
+                  remarks: 逻辑删除标识
+        - createIndex:
+            indexName: idx_order_id
+            tableName: t_sales_order_item
+            unique: false
+            columns:
+              - column:
+                  name: order_id
+        - createIndex:
+            indexName: idx_medicine_id
+            tableName: t_sales_order_item
+            unique: false
+            columns:
+              - column:
+                  name: medicine_id
